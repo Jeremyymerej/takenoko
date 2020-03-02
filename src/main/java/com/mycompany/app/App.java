@@ -23,7 +23,7 @@ public class App
 
         int maxNumberOfTurns = 10;
         int currentTurn = 0;
-        List<String> playableOptions = Arrays.asList("drawObjective", "drawTile", "end");
+        List<String> playableOptions = Arrays.asList("drawObjective", "drawTile", "gardener", "end");
         Player currentPlayer;
         while (currentTurn < maxNumberOfTurns){
             currentPlayer = players.get((currentTurn) % (players.size()));
@@ -49,12 +49,24 @@ public class App
                 Side choseSide = Side.valueOf(chosenSide);
                 Tile target = game.getPlateau().stream().filter(t -> t.getId() == chosenTilePosition ).findFirst().get();
                 game.putTileAside(newTile, choseSide, target);
-            } else { // END
+            } else if (chosenOption.equals(playableOptions.get(2))) {
+                int chosenGardenerPosition;
+                Side choseSide;
+                do {
+                    System.out.println("Please choose a side within : " + Arrays.asList(Side.values()));
+                    String chosenSide = scanner.next();
+                    choseSide = Side.valueOf(chosenSide);
+                    System.out.println("Please choose a distance to put your tile (enter a number)");
+                    chosenGardenerPosition = scanner.nextInt();
+                } while(!game.canGardenerMoveTo(choseSide, chosenGardenerPosition));
+                game.moveGardenerPiece(choseSide, chosenGardenerPosition);
+            }else { // END
                 currentTurn = 1000;
             }
             System.out.println("Check if you completed some objectives");
             currentPlayer.completeObjective(game);
             System.out.println("=== BOARD STATE === \n" + game.printTileBoard("type"));
+            System.out.println("=== Garderner === \n" + "x : " + game.getGardenerPiece().getCoordX() + ", y : " + game.getGardenerPiece().getCoordY());
             System.out.println("End of turn of player " + currentPlayer.getName());
             currentTurn++;
         }

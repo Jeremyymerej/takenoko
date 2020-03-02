@@ -4,10 +4,8 @@ import com.mycompany.app.TakenokoGame.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.*;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 
 import static org.junit.Assert.*;
 
@@ -398,5 +396,73 @@ public class TakenokoGameTest {
         assertNull(game.getCurrentPlayerToPlay());
         game.start();
         assertEquals(game.getCurrentPlayerToPlay(), players.get(0));
+    }
+
+    @Test
+    public void testGameInitWithGardenerOnStartTile() {
+        assertNull(game.getGardenerPiece());
+        game.init(players);
+        assertNotNull(game.getGardenerPiece());
+        GardernerPiece gardernerPiece = game.getGardenerPiece();
+        assertEquals(TileType.START, game.getGardernerTileType());
+        assertEquals(0, gardernerPiece.getCoordX(), comparisonDelta);
+        assertEquals(0, gardernerPiece.getCoordY(), comparisonDelta);
+    }
+
+    @Test
+    public void testGameGetStartTile(){
+        game.init(players);
+        Tile expectedStartTile = game.getStartTile();
+        assertEquals(TileType.START, expectedStartTile.getType());
+        assertEquals(0, expectedStartTile.getXcoord(), comparisonDelta);
+        assertEquals(0, expectedStartTile.getYcoord(), comparisonDelta);
+    }
+
+    @Test
+    public void testGameGetTileAtSpecificCoord(){
+        game.init(players);
+        Tile expectedStartTile = game.getStartTile();
+        Tile anyTile = game.anyTile();
+        assertEquals(expectedStartTile, game.getTileAt(0,0));
+        assertEquals(null, game.getTileAt(1,0));
+        game.putTileAside(anyTile, Side.EAST, expectedStartTile);
+        assertEquals(anyTile, game.getTileAt(1,0));
+    }
+
+    @Test
+    public void testTestMoveGardenerStraightLineIsPossible() {
+        game.init(players);
+        Tile tileToPutEast = new Tile(TileType.GREEN);
+        Tile tiletoPutEast2 = new Tile(TileType.GREEN);
+
+        game.putTileAside(tileToPutEast, Side.EAST, game.getStartTile());
+        game.putTileAside(tiletoPutEast2, Side.EAST, tileToPutEast);
+
+        assertTrue(game.canGardenerMoveTo(Side.EAST, 2));
+        assertFalse(game.canGardenerMoveTo(Side.SOUTH_EAST, 2));
+        GardernerPiece gardernerPiece = game.getGardenerPiece();
+        assertEquals(TileType.START, game.getGardernerTileType());
+        assertEquals(0, gardernerPiece.getCoordX(), comparisonDelta);
+        assertEquals(0, gardernerPiece.getCoordY(), comparisonDelta);
+    }
+
+    @Test
+    public void testMoveGardenerStraightLineWithXMove() {
+        game.init(players);
+        GardernerPiece gardernerPiece = game.getGardenerPiece();
+
+        Tile tileToPutEast = new Tile(TileType.GREEN);
+        Tile tiletoPutEast2 = new Tile(TileType.GREEN);
+
+        game.putTileAside(tileToPutEast, Side.EAST, game.getStartTile());
+        game.putTileAside(tiletoPutEast2, Side.EAST, tileToPutEast);
+        assertEquals(TileType.START, game.getGardernerTileType());
+        assertEquals(0, gardernerPiece.getCoordX(), comparisonDelta);
+        assertEquals(0, gardernerPiece.getCoordY(), comparisonDelta);
+        game.moveGardenerPiece(Side.EAST,2);
+        assertEquals(TileType.GREEN, game.getGardernerTileType());
+        assertEquals(2, gardernerPiece.getCoordX(), comparisonDelta);
+        assertEquals(0, gardernerPiece.getCoordY(), comparisonDelta);
+
     }
 }

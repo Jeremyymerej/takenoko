@@ -13,12 +13,12 @@ public class TakenokoGame {
     private List<Player> players;
     private List<Objective> objectives;
     private Player currentPlayer;
+    private GardernerPiece gardernerPiece;
 
     public TakenokoGame() {
-        this.plateau = new ArrayList<>();
-        this.players = new ArrayList<>();
-        this.objectives = new ArrayList<>();
-
+        plateau = new ArrayList<>();
+        players = new ArrayList<>();
+        objectives = new ArrayList<>();
     }
 
     public String start() {
@@ -30,6 +30,8 @@ public class TakenokoGame {
         Tile startTile = new Tile(TileType.START);
         startTile.setCoord(new TileCoord(0, 0));
         plateau.add(startTile);
+        gardernerPiece = new GardernerPiece(new TileCoord(0,0));
+
         this.players = players;
         objectives.add(new Objective(ObjectiveType.TILES, Arrays.asList(new Tile(TileType.START)), 5));
 
@@ -221,5 +223,92 @@ public class TakenokoGame {
 
     public Tile anyTile() {
         return new Tile(TileType.GREEN);
+    }
+
+    public GardernerPiece getGardenerPiece() {
+        return gardernerPiece;
+    }
+
+    public Tile getStartTile() {
+        return getTileAt(0,0);
+    }
+
+    public Tile getTileAt(double x, double y) {
+        Optional<Tile> expectedTile = getPlateau().stream().filter(t -> t.getXcoord() == x && t.getYcoord() == y).findFirst();
+        return expectedTile.orElse(null);
+    }
+
+    public boolean canGardenerMoveTo(Side side, int distance) {
+        Tile tileFound = null;
+        int modifierX = 0;
+        int modifierY = 0;
+        switch (side) {
+            case NORTH_EAST:
+                modifierX = 1;
+                modifierY = 1;
+                break;
+            case EAST:
+                modifierX = 1;
+                break;
+            case SOUTH_EAST:
+                modifierX = 1;
+                modifierY = -1;
+                break;
+            case SOUTH_WEST:
+                modifierX = -1;
+                modifierY = -1;
+                break;
+            case WEST:
+                modifierX = -1;
+                break;
+            case NORTH_WEST:
+                modifierX = -1;
+                modifierY = 1;
+                break;
+            default:
+                break;
+        }
+        tileFound = getTileAt(gardernerPiece.getCoordX() + (modifierX * distance), gardernerPiece.getCoordY() + (modifierY * distance));
+        if(tileFound == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public void moveGardenerPiece(Side side, int distance) {
+        int modifierX = 0;
+        int modifierY = 0;
+        switch (side) {
+            case NORTH_EAST:
+                modifierX = 1;
+                modifierY = 1;
+                break;
+            case EAST:
+                modifierX = 1;
+                break;
+            case SOUTH_EAST:
+                modifierX = 1;
+                modifierY = -1;
+                break;
+            case SOUTH_WEST:
+                modifierX = -1;
+                modifierY = -1;
+                break;
+            case WEST:
+                modifierX = -1;
+                break;
+            case NORTH_WEST:
+                modifierX = -1;
+                modifierY = 1;
+                break;
+            default:
+                break;
+        }
+        gardernerPiece.setCoord(new TileCoord((int) gardernerPiece.getCoordX() + (modifierX * distance),(int) gardernerPiece.getCoordY() + (modifierY * distance)));
+    }
+
+    public TileType getGardernerTileType() {
+        return getTileAt(gardernerPiece.getCoordX(), gardernerPiece.getCoordY()).getType();
     }
 }
