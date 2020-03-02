@@ -1,8 +1,5 @@
 package com.mycompany.app.TakenokoGame;
 
-import com.mycompany.app.takenoko.ObjectiveType;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class Objective {

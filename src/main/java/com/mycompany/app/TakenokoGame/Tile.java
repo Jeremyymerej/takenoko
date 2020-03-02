@@ -1,7 +1,5 @@
 package com.mycompany.app.TakenokoGame;
 
-import com.mycompany.app.takenoko.TileCoord;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

@@ -1,10 +1,6 @@
 package com.mycompany.app.TakenokoGame;
 
-import com.mycompany.app.takenoko.ObjectiveType;
-import com.mycompany.app.takenoko.TileCoord;
-
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;

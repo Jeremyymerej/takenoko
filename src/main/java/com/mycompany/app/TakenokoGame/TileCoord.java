@@ -1,4 +1,4 @@
-package com.mycompany.app.takenoko;
+package com.mycompany.app.TakenokoGame;
 
 import java.awt.*;
 
